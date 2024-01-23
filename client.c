@@ -6,7 +6,7 @@
 /*   By: wecorzo- <wecorzo-@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 10:24:31 by wecorzo-          #+#    #+#             */
-/*   Updated: 2024/01/23 15:49:36 by wecorzo-         ###   ########.fr       */
+/*   Updated: 2024/01/23 17:20:46 by wecorzo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void	send_binario(char *str, int pid)
 {
-	int	i;
+	int		i;
 	char	c;
 
 	while (*str)
@@ -30,26 +30,13 @@ void	send_binario(char *str, int pid)
 			else
 				kill(pid, SIGUSR2);
 			i--;
-			usleep(380);
+			usleep(120);
 		}
 		str++;
 	}
-	/*
-	if (num > 1)
-		send_binario(num / 2, pid);
-	if  (num % 2 == 1)
-	{
-		kill(pid, SIGUSR1);
-		usleep(350);
-	}
-	else if (num % 2 == 0)
-	{
-		kill(pid, SIGUSR2);
-		usleep(350);
-	}*/
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	pid_t	pid;
 	char	*str;

@@ -6,7 +6,7 @@
 /*   By: wecorzo- <wecorzo-@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:19:52 by wecorzo-          #+#    #+#             */
-/*   Updated: 2024/01/23 17:36:32 by wecorzo-         ###   ########.fr       */
+/*   Updated: 2024/01/30 08:16:12 by wecorzo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,48 +14,52 @@
 #include <signal.h>
 #include <stdio.h>
 
-void	handler(int sign)
+void	handler(int sign, siginfo_t *info, void *context)
 {
 	static char	result;
 	static int	i;
-	//static char	*word;
+	static char	*word;
+
+	result = 0;
+	(void)context;
+	(void)info;
+	if (word == NULL)
+		word = malloc(sizeof(char));
 	if (sign == SIGUSR1)
-	{
-		result <<= 1;
 		result += 1;
-	}
-	else
-	{
-		result <<= 1;
-		result += 0;
-	}
+	result <<= 1;
 	i++;
 	if (i == 8)
 	{
-		write(1, &result, 1);
-		/*while (result != '\0')
+		if (result == '\0')
+			(/*kill(info->si_pid, SIGUSR2), */ft_printf("%s", word));
+		else
 		{
 			word = ft_strjoin(word, &result);
 			if (!word)
 				(free(word), exit(1));
 		}
-		ft_putstr_fd(word, 1);
-		free(word);*/
-		result = 0;
+		//free(word);
 		i = 0;
 	}
 }
 
 int	main(void)
 {
+	struct sigaction sa1;
+	struct sigaction sa2;
 	pid_t	pid;
 
-	if ((signal(SIGUSR1, handler) == SIG_ERR)
-		|| signal(SIGUSR2, handler) == SIG_ERR)
-		write(2, "Error Al configurar el Manejador de Señales \n", 44);
 	pid = getpid();
-	ft_putstr_fd(ft_itoa(pid), 1);
-	write(1, "\n", 1);
+	sa1.sa_flags = SA_SIGINFO;
+	sa1.sa_sigaction = handler;
+	if (sigaction(SIGUSR1, &sa1, NULL) == -1)
+		ft_printf("Error registering signal handler\n");
+	sa2.sa_flags = SA_SIGINFO;
+	sa2.sa_sigaction = handler;
+	if (sigaction(SIGUSR2, &sa2, NULL) == -1)
+		ft_printf("Error registering signal handler\n");
+	ft_printf("Served started \n PID:%d", pid);
 	while (1)
 		sleep(1);
 	return (0);

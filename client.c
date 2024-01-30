@@ -6,7 +6,7 @@
 /*   By: wecorzo- <wecorzo-@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 10:24:31 by wecorzo-          #+#    #+#             */
-/*   Updated: 2024/01/23 17:20:46 by wecorzo-         ###   ########.fr       */
+/*   Updated: 2024/01/30 07:40:36 by wecorzo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,16 @@
 #include <signal.h>
 #include <stdio.h>
 
-void	send_binario(char *str, int pid)
+static void	handler(int sign)
+{
+	if (sign == SIGUSR2)
+	{
+		ft_printf("Message sent succesfully ✨\n");
+		exit(0);
+	}
+}
+
+static void	send_binario(char *str, int pid)
 {
 	int		i;
 	char	c;
@@ -41,10 +50,15 @@ int	main(int argc, char **argv)
 	pid_t	pid;
 	char	*str;
 
+	if (signal(SIGUSR1, handler) == SIG_ERR 
+		|| signal(SIGUSR2, handler) == SIG_ERR)
+		ft_printf("Error registerin signal\n");
 	if (argc != 3)
 		return (1);
 	pid = ft_atoi(argv[1]);
 	str = argv[2];
 	send_binario(str, pid);
+	sleep(8);
+	ft_printf("Error sending message\n");
 	return (0);
 }

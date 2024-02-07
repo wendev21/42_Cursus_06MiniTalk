@@ -6,7 +6,7 @@
 /*   By: wecorzo- <wecorzo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 10:24:31 by wecorzo-          #+#    #+#             */
-/*   Updated: 2024/02/07 11:16:19 by wecorzo-         ###   ########.fr       */
+/*   Updated: 2024/02/07 11:11:04 by wecorzo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@
 static void	handler(int sign)
 {
 	if (sign == SIGUSR2)
+	{
+		ft_printf("Message sent succesfully ✨\n");
 		exit(0);
+	}
 }
 
 static int	error_syntax(char *str_n)
@@ -50,7 +53,7 @@ void	send_binario(char str, int pid)
 		else
 			kill(pid, SIGUSR2);
 		i--;
-		usleep(180);
+		usleep(200);
 	}
 	usleep(350);
 }
